@@ -1,0 +1,9 @@
+.search-bar form {
+    display: flex;
+    justify-content: center;
+}
+
+.search-bar input, .search-bar button {
+    padding: 10px;
+    font-size: 18px;
+}
