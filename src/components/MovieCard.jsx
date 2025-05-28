@@ -1,8 +1,11 @@
 import '../styles/MovieCard.css'
+import placeholderImage from '../assets/placeholder_image.png'
 
 const MovieCard = ({ title, posterPath, voteAverage, onClick }) => {
   
-  const imageUrl = `https://image.tmdb.org/t/p/w500${posterPath}`
+  const imageUrl = posterPath
+    ? `https://image.tmdb.org/t/p/w500${posterPath}`
+    : placeholderImage
 
   return (
     <div className="movie-card" onClick={onClick}>
