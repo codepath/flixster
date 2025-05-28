@@ -9,27 +9,32 @@ const MovieList = ({ query, filter }) => {
   const [selectedMovie, setSelectedMovie] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  // Reset page to 1 when query or filter changes
+  useEffect(() => {
+    setPage(1)
+  }, [query, filter])
+
   useEffect(() => {
     fetchMovies();
+    // eslint-disable-next-line
   }, [page, query, filter])
 
   const fetchMovies = async () => {
     const apiKey = import.meta.env.VITE_API_KEY
-    let url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=${filter}&page=${page}`
+    let url
 
     if (query) {
       url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(query)}&page=${page}`
+    } else {
+      url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=${filter}&page=${page}`
     }
 
     try {
       const response = await fetch(url)
-
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`)
       }
-
       const data = await response.json()
-
       if (page > 1) {
         setMovies(prev => [
           ...prev,
