@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import MovieCard from './MovieCard'
 import Modal from './Modal'
 import '../styles/MovieList.css'
+import placeholderImage from '../assets/placeholder_image.png'
 
 const MovieList = ({ query, filter }) => {
   const [movies, setMovies] = useState([])
@@ -9,14 +10,12 @@ const MovieList = ({ query, filter }) => {
   const [selectedMovie, setSelectedMovie] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Reset page to 1 when query or filter changes
   useEffect(() => {
     setPage(1)
   }, [query, filter])
 
   useEffect(() => {
     fetchMovies();
-    // eslint-disable-next-line
   }, [page, query, filter])
 
   const fetchMovies = async () => {
@@ -96,24 +95,32 @@ const MovieList = ({ query, filter }) => {
 
       <button onClick={loadMore}>Load More</button>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className="movie-details">
-            <h2>{selectedMovie?.title}</h2>
-            <img src={`https://image.tmdb.org/t/p/w500${selectedMovie?.backdrop_path}`} alt={selectedMovie?.title} />
-            <p><strong>Release Date:</strong> {selectedMovie?.release_date}</p>
-            <p><strong>Overview:</strong> {selectedMovie?.overview}</p>
-            <p><strong>Genres:</strong> {selectedMovie?.genres.map(genre => genre.name).join(', ')}</p>
-            {selectedMovie?.trailerUrl && (
-                <iframe
-                  src={selectedMovie.trailerUrl}
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  title="Movie Trailer"
-                  width="560" height="315"
-                ></iframe>
-            )}
-        </div>
-      </Modal>
+<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+  <div className="movie-details">
+    <h2>{selectedMovie?.title}</h2>
+    <img
+      src={
+        selectedMovie?.poster_path
+          ? `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`
+          : placeholderImage
+      }
+      alt={selectedMovie?.title}
+      style={{ maxWidth: '300px', width: '100%' }}
+    />
+    <p><strong>Release Date:</strong> {selectedMovie?.release_date}</p>
+    <p><strong>Overview:</strong> {selectedMovie?.overview}</p>
+    <p><strong>Genres:</strong> {selectedMovie?.genres.map(genre => genre.name).join(', ')}</p>
+    {selectedMovie?.trailerUrl && (
+      <iframe
+        src={selectedMovie.trailerUrl}
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        title="Movie Trailer"
+        width="560" height="315"
+      ></iframe>
+    )}
+  </div>
+</Modal>
     </div>
   )
 }
